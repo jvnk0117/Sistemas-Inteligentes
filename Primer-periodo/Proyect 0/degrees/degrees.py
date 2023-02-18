@@ -92,7 +92,7 @@ def shortest_path(source, target):
     If no possible path,+ returns None.
     """
 
-    # TODO
+    # TODO: define frontiers
     raise NotImplementedError
 
 
