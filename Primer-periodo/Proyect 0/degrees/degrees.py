@@ -100,7 +100,7 @@ def shortest_path(source, target):
     frontier =  QueueFrontier()
     frontier.add(startNode)
 
-    exploredNode = set()
+    exploredNodes = []
 
 
     # TODO: define frontiers
