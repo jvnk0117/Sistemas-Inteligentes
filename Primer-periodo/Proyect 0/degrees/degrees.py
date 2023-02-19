@@ -1,3 +1,6 @@
+#Authors:
+#Alejandro Perez Gonzalez A01746643
+
 import csv
 import sys
 
@@ -91,6 +94,14 @@ def shortest_path(source, target):
 
     If no possible path,+ returns None.
     """
+
+    #Initializing starting node and definig frontiers
+    startNode =  Node(source,None,None)
+    frontier =  QueueFrontier()
+    frontier.add(startNode)
+
+    exploredNode = set()
+
 
     # TODO: define frontiers
     raise NotImplementedError
