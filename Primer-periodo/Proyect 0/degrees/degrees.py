@@ -21,7 +21,7 @@ def load_data(directory):
     Load data from CSV files into memory.
     """
     # Load people
-    with open(f"{directory}/people.csv", encoding="utf-8") as f:
+    with open(f"Primer-periodo/Proyect 0/degrees/large/people.csv") as f:
         reader = csv.DictReader(f)
         for row in reader:
             people[row["id"]] = {
@@ -35,7 +35,7 @@ def load_data(directory):
                 names[row["name"].lower()].add(row["id"])
 
     # Load movies
-    with open(f"{directory}/movies.csv", encoding="utf-8") as f:
+    with open(f"Primer-periodo/Proyect 0/degrees/large/movies.csv", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             movies[row["id"]] = {
@@ -45,7 +45,7 @@ def load_data(directory):
             }
 
     # Load stars
-    with open(f"{directory}/stars.csv", encoding="utf-8") as f:
+    with open(f"Primer-periodo/Proyect 0/degrees/large/stars.csv", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
             try:
@@ -96,27 +96,30 @@ def shortest_path(source, target):
     """
 
     #Initializing starting node and definig frontiers
-
-    exploredNodes = []
-
-    startNode =  Node(source,None,None)
-    frontier =  QueueFrontier()
-    frontier.add(startNode)
-
-    while True:
-
-        if frontier.empty():
-            print("no connection to current actor")
-            return None
-
-        currentNode = frontier.remove()
-        exploredNodes.append(currentNode.state)
+    explored = set([])
+    frontier = [source]
+    parents = {}
+    while len(frontier) > 0:
+        person = frontier.pop(0)
+        if person == target:
+            break
+        explored.add(person)
+        for (m, p) in neighbors_for_person(person):
+            if not p in frontier and not p in explored:
+                frontier.append(p)
+                parents[p] = (m, person)
+    if not target in parents:
+        return None
+    path = []
+    person = target
+    while person != source:
+        m, p = parents[person]
+        path.append((m, person))
+        person = p
+    path = path[::-1]
+    return path 
 
     
-
-
-    # TODO: define frontiers
-    raise NotImplementedError
 
 def person_id_for_name(name):
     """
