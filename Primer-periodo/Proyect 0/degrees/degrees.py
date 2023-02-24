@@ -96,16 +96,27 @@ def shortest_path(source, target):
     """
 
     #Initializing starting node and definig frontiers
+
+    exploredNodes = []
+
     startNode =  Node(source,None,None)
     frontier =  QueueFrontier()
     frontier.add(startNode)
 
-    exploredNodes = []
+    while True:
+
+        if frontier.empty():
+            print("no connection to current actor")
+            return None
+
+        currentNode = frontier.remove()
+        exploredNodes.append(currentNode.state)
+
+    
 
 
     # TODO: define frontiers
     raise NotImplementedError
-
 
 def person_id_for_name(name):
     """
