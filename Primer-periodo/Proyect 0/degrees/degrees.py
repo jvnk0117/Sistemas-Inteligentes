@@ -103,37 +103,35 @@ def shortest_path(source, target):
 
     while True:
 
-      # Check for empty Frontier and return with no path if empty
+    
       if frontier.empty():
         raise Exception('No solution')
 
-      # Otherwise expand the next node in the Queue, add it to the explored states and get set of movies and actors for the actor in the current node:
       currentNode = frontier.remove()
       exploredNodes.add(currentNode.state)
 
       for action, state in neighbors_for_person(currentNode.state):
 
-        # If state (actor) is the target actor then solution has been found, return path:
+        # Target has been found
         if state == target:
-          print('Solution Found!')
-          print(len(exploredNodes), 'actors explored to find solution!')
-          # Create path from source to target
           path = []
           path.append((action, state))
 
           # Add action and state to path until back to start node
           while currentNode.parent != None:
-            path.append((currentNode.action, currentNode.state))
+            actualNodeAction = currentNode.action
+            actualNodeState = currentNode.state
+            path.append((actualNodeAction,actualNodeState))
             currentNode = currentNode.parent
 
           path.reverse()
 
           return path
 
-        # Otherwise add the new states to explore to the frontier:
+        # Add neighbors to frontier
         if not frontier.contains_state(state) and state not in exploredNodes:
-          new_node = Node(state, currentNode, action)
-          frontier.add(new_node)
+          child = Node(state, currentNode, action)
+          frontier.add(child)
 
 
 def person_id_for_name(name):
