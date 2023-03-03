@@ -114,19 +114,19 @@ def shortest_path(source, target):
 
         # Target has been found
         if state == target:
-          path = []
-          path.append((action, state))
+          tracedPath = []
+          tracedPath.append((action, state))
 
-          # Add action and state to path until back to start node
+          #tracing path 
           while currentNode.parent != None:
             actualNodeAction = currentNode.action
             actualNodeState = currentNode.state
-            path.append((actualNodeAction,actualNodeState))
+            tracedPath.append((actualNodeAction,actualNodeState))
             currentNode = currentNode.parent
 
-          path.reverse()
+          tracedPath.reverse()
 
-          return path
+          return tracedPath
 
         # Add neighbors to frontier
         if not frontier.contains_state(state) and state not in exploredNodes:
