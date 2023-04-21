@@ -2,10 +2,12 @@
 Tic Tac Toe Player
 Authors: 
 Alejandro Perez Gonzalez A01746643
+Lizbeth Paulina Ayala Parra A01747237
 
 """
 
 import math
+from copy import deepcopy
 
 X = "X"
 O = "O"
@@ -68,37 +70,37 @@ def result(board, action):
         raise ValueError("Position already occupied")
 
     
-    
-    board_copy = deepcopy(board)
-    board_copy[i][j] = player(board)
-    return board_copy
+    boardcopy = deepcopy(board)
+
+    boardcopy[action[0]][action[1]] = player(board)
+
+    return boardcopy
+
+
 
 
 def winner(board):
-    """
-    Returns the winner of the game, if there is one.
-    """
-    #Diagonal
-    if board[0][0] and board[1][1] and board[2][2] == X:
-        return X
-    if board[0][0] and board[1][1] and board[2][2] == O:
-        return O
 
-    #Rows
-    for row in board:
-        if row.count(X) == 3:
-            return X
-        if row.count(O) == 3:
-            return O
-    #Columns
-    cols = ''
     for i in range(3):
-        for j in range(3):
-            cols += str(board[i][j])
-    if cols == 'XXX':
+        if board[i][0] == board[i][1] == board[i][2] == X:
+            return X
+        if board[i][0] and board[i][1] and board[i][2] == O:
+            return O
+        
+    for j in range(3):
+        if board[0][j] and board[1][j] and board[2][j] == X:
+            return X
+        if board[0][j] and board[1][j] and board[2][j] == O:
+            return O
+
+    if board[0][0] and board[1][1] and board[2][2] or board[0][2] and board[1][1] and board[2][1] == X:
         return X
-    if cols == 'OOO':
+    if board[0][0] and board[1][1] and board[2][2] or board[0][2] and board[1][1] and board[2][1] == O:
         return O
+    
+    #No winner found
+    return EMPTY
+
 
 
 
@@ -132,10 +134,63 @@ def utility(board):
 
 
 
+def minimax_max(board):
+    """
+    Returns the maximum possible score for X player.
+    """
+    if terminal(board):
+        return utility(board)
+
+    best_score = -math.inf
+    for action in actions(board):
+        score = minimax_min(result(board, action))
+        best_score = max(best_score, score)
+    return best_score
+
+
+def minimax_min(board):
+    """
+    Returns the minimum possible score for O player.
+    """
+    if terminal(board):
+        return utility(board)
+
+    best_score = math.inf
+    for action in actions(board):
+        score = minimax_max(result(board, action))
+        best_score = min(best_score, score)
+    return best_score
+
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     'X' Player is trying to maximise the score, 'O' Player is trying to minimise it
     """
-    raise NotImplementedError
+    current_player = player(board)
+
+    # If the game is over, return None as there is no action to take
+    if terminal(board):
+        return None
+
+    if current_player == X:
+        # Maximize the score
+        best_score = -math.inf
+        best_action = None
+        for action in actions(board):
+            score = minimax_min(result(board, action))
+            if score > best_score:
+                best_score = score
+                best_action = action
+        return best_action
+
+    else:
+        # Minimize the score
+        best_score = math.inf
+        best_action = None
+        for action in actions(board):
+            score = minimax_max(result(board, action))
+            if score < best_score:
+                best_score = score
+                best_action = action
+        return best_action
 
