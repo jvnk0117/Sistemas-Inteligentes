@@ -1,3 +1,9 @@
+#Authors Alejandro Perez Gonzalez A01746643
+
+#Documentation:
+#https://www.tensorflow.org/api_docs/python/tf/all_symbols
+#https://www.tensorflow.org/api_docs/python/tf/keras/layers/Conv2D
+
 import cv2
 import numpy as np
 import os
@@ -58,7 +64,42 @@ def load_data(data_dir):
     be a list of integer labels, representing the categories for each of the
     corresponding `images`.
     """
-    raise NotImplementedError
+    #Declaring main lists
+    images = []
+    labels = []
+    pathImages = []
+    imageDimension = [IMG_WIDTH,IMG_HEIGHT]
+
+    mainPath = os.path.join(data_dir)
+    print('path to folders: ',mainPath)
+    labelNumbers = 0
+    for folders in os.listdir(mainPath):
+        labelNumbers += 1
+      
+        
+    # Looping into child directories
+    for subDirectors in range(labelNumbers):
+        subfolder = os.path.join(mainPath, str(subDirectors))
+        #reseting list
+        pathImages.clear()
+
+        for imageElement in os.listdir(subfolder):
+            pathImages.append(imageElement)
+
+        
+        for imageElement in pathImages:
+            pathToimage = os.path.join(mainPath, str(subDirectors), imageElement)
+            labels.append(subDirectors)
+            img = cv2.imread(pathToimage)
+
+            #appending and rezising images
+            images.append(cv2.resize(img, imageDimension, interpolation= cv2.INTER_AREA))
+     
+    tuple(images)
+    tuple(labels)
+    return images, labels
+
+
 
 
 def get_model():
@@ -67,7 +108,41 @@ def get_model():
     `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
     The output layer should have `NUM_CATEGORIES` units, one for each category.
     """
-    raise NotImplementedError
+    model = tf.keras.Sequential(
+            [
+                # Convolution layers
+                tf.keras.layers.Conv2D(
+                    40, (3, 3), activation="relu", dilation_rate = 2,input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)
+                ),
+                tf.keras.layers.Conv2D( # -> makes model go vrooooom
+                    40, (3, 3), activation="relu", dilation_rate = 2,input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)
+                ),
+                # Pooling layers
+                tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+                tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+                tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+                tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
+
+                # Add a hidden layer with dropout
+                tf.keras.layers.Dense(200, activation="relu"),
+                # Add a 50% dropout
+                tf.keras.layers.Dropout(0.5),
+                # Add an output layer with output units for all labels
+                tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax"),
+                # Flatten units
+                tf.keras.layers.Flatten(),
+            ]
+        )
+
+    
+
+    model.compile(
+            optimizer="nadam", loss="categorical_crossentropy", metrics=["accuracy"]
+        )
+    
+    #OUTPUT
+    #model.summary()
+    return model
 
 
 if __name__ == "__main__":
