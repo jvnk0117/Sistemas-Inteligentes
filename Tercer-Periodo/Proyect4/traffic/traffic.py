@@ -1,5 +1,6 @@
-#Authors Alejandro Perez Gonzalez A01746643
-
+#Authors 
+#Alejandro Perez Gonzalez A01746643
+#Lizbeth Paulina Ayala Parra A01747237
 #Documentation:
 #https://www.tensorflow.org/api_docs/python/tf/all_symbols
 #https://www.tensorflow.org/api_docs/python/tf/keras/layers/Conv2D
@@ -80,7 +81,7 @@ def load_data(data_dir):
     # Looping into child directories
     for subDirectors in range(labelNumbers):
         subfolder = os.path.join(mainPath, str(subDirectors))
-        #reseting list
+        #clearing list to create a new one for each new subpath 
         pathImages.clear()
 
         for imageElement in os.listdir(subfolder):
@@ -93,7 +94,8 @@ def load_data(data_dir):
             img = cv2.imread(pathToimage)
 
             #appending and rezising images
-            images.append(cv2.resize(img, imageDimension, interpolation= cv2.INTER_AREA))
+            #INTER_NEAREST makes a
+            images.append(cv2.resize(img, imageDimension, interpolation = cv2.INTER_CUBIC))
      
     tuple(images)
     tuple(labels)
@@ -123,13 +125,9 @@ def get_model():
                 tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
                 tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
 
-                # Add a hidden layer with dropout
                 tf.keras.layers.Dense(200, activation="relu"),
-                # Add a 50% dropout
                 tf.keras.layers.Dropout(0.5),
-                # Add an output layer with output units for all labels
                 tf.keras.layers.Dense(NUM_CATEGORIES, activation="softmax"),
-                # Flatten units
                 tf.keras.layers.Flatten(),
             ]
         )
@@ -140,8 +138,7 @@ def get_model():
             optimizer="nadam", loss="categorical_crossentropy", metrics=["accuracy"]
         )
     
-    #OUTPUT
-    #model.summary()
+
     return model
 
 
